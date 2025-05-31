@@ -1,15 +1,25 @@
+import { useFeed } from '@hooks/useFeed';
+import { useIngredients } from '@hooks/useIngredients';
+import { useDispatch } from '@store';
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const { orders, loading, getFeeds } = useFeed();
+  const dispatch = useDispatch();
+  const { fetchIngredients } = useIngredients();
 
-  if (!orders.length) {
+  useEffect(() => {
+    if (orders.length === 0 && !loading) {
+      getFeeds();
+    }
+    fetchIngredients();
+  }, [dispatch, orders.length, loading]);
+
+  if (loading) {
     return <Preloader />;
   }
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
+  return <FeedUI orders={orders} handleGetFeeds={getFeeds} />;
 };

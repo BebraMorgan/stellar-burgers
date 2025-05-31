@@ -15,99 +15,78 @@ import {
   ResetPassword
 } from '@pages';
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+
+const RootLayout = () => (
+  <>
+    <AppHeader />
+    <Outlet />
+  </>
+);
 
 const router = createBrowserRouter([
-  { path: '/', element: <ConstructorPage /> },
   {
-    path: '/login',
-    element: (
-      <ProtectedRoute>
-        <Login />
-      </ProtectedRoute>
-    )
-  },
-  {
-    path: '/register',
-    element: (
-      <ProtectedRoute>
-        <Register />
-      </ProtectedRoute>
-    )
-  },
-  {
-    path: '/forgot-password',
-    element: (
-      <ProtectedRoute>
-        <ForgotPassword />
-      </ProtectedRoute>
-    )
-  },
-  {
-    path: '/reset-password',
-    element: (
-      <ProtectedRoute>
-        <ResetPassword />
-      </ProtectedRoute>
-    )
-  },
+    element: <RootLayout />,
+    children: [
+      { path: '/', element: <ConstructorPage /> },
 
-  // Профиль пользователя и связанные страницы
-  {
-    path: '/profile',
-    element: (
-      <ProtectedRoute>
-        <Profile />
-      </ProtectedRoute>
-    )
-  },
-  {
-    path: '/profile/orders',
-    element: (
-      <ProtectedRoute>
-        <ProfileOrders />
-      </ProtectedRoute>
-    )
-  },
-  {
-    path: '/profile/orders/:number',
-    element: (
-      <ProtectedRoute>
-        <ModalWrapper title='Информация о заказе'>
-          <OrderInfo />
-        </ModalWrapper>
-      </ProtectedRoute>
-    )
-  },
+      {
+        element: <ProtectedRoute type='guest' />,
+        children: [
+          { path: '/login', element: <Login /> },
+          { path: '/register', element: <Register /> },
+          { path: '/forgot-password', element: <ForgotPassword /> },
+          { path: '/reset-password', element: <ResetPassword /> }
+        ]
+      },
 
-  // Лента заказов и детали заказа по номеру
-  { path: '/feed', element: <Feed /> },
-  {
-    path: '/feed/:number',
-    element: (
-      <ModalWrapper title='Информация о заказе'>
-        <OrderInfo />
-      </ModalWrapper>
-    )
-  },
+      {
+        element: <ProtectedRoute type='auth' />,
+        children: [
+          { path: '/profile', element: <Profile /> },
+          { path: '/profile/orders', element: <ProfileOrders /> },
+          {
+            path: '/profile/orders/:number',
+            element: (
+              <ModalWrapper
+                navigationOnClose='/profile/orders'
+                title='Информация о заказе'
+              >
+                <OrderInfo />
+              </ModalWrapper>
+            )
+          }
+        ]
+      },
 
-  // Страница с информацией об ингредиенте по ID
-  {
-    path: '/ingredients/:id',
-    element: (
-      <ModalWrapper title='Информация об ингредиенте'>
-        <IngredientDetails />
-      </ModalWrapper>
-    )
-  },
+      { path: '/feed', element: <Feed /> },
+      {
+        path: '/feed/:number',
+        element: (
+          <ModalWrapper navigationOnClose='/feed' title='Информация о заказе'>
+            <OrderInfo />
+          </ModalWrapper>
+        )
+      },
+      {
+        path: '/ingredients/:id',
+        element: (
+          <ModalWrapper
+            navigationOnClose={'/'}
+            title='Информация об ингредиенте'
+          >
+            <IngredientDetails />
+          </ModalWrapper>
+        )
+      },
 
-  // Обработка всех остальных путей — страница 404
-  { path: '*', element: <NotFound404 /> }
+      { path: '*', element: <NotFound404 /> }
+    ]
+  }
 ]);
 
 const App = () => (
   <div className={styles.app}>
-    <AppHeader />
     <RouterProvider router={router} />
   </div>
 );
