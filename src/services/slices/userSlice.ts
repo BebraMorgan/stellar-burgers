@@ -9,7 +9,7 @@ import {
   TLoginData
 } from '@api';
 import { TUser } from '@utils-types';
-import { deleteCookie, setCookie } from '@utils-cookie';
+import { deleteCookie, getCookie, setCookie } from '@utils-cookie';
 
 interface UserState {
   user: TUser | null;
@@ -28,6 +28,13 @@ const initialState: UserState = {
 export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
   'user/fetchUser',
   async (_, thunkAPI) => {
+    const accessToken = getCookie('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (!accessToken || !refreshToken) {
+      return thunkAPI.rejectWithValue('No tokens found');
+    }
+
     try {
       const response = await getUserApi();
       if (response.success) {

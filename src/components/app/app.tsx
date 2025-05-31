@@ -16,13 +16,23 @@ import {
 } from '@pages';
 
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { useEffect } from 'react';
+import { fetchUser } from '@slices';
+import { useDispatch } from '@store';
 
-const RootLayout = () => (
-  <>
-    <AppHeader />
-    <Outlet />
-  </>
-);
+const RootLayout = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+  return (
+    <>
+      <AppHeader />
+      <Outlet />
+    </>
+  );
+};
 
 const router = createBrowserRouter([
   {
