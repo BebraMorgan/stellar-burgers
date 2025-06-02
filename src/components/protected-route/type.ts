@@ -1,3 +1,3 @@
 export interface ProtectedRouteProps {
-  type?: 'auth' | 'guest';
+  type?: 'auth' | 'guest' | 'all';
 }

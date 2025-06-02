@@ -1,11 +1,15 @@
-import { FC, SyntheticEvent, useState, useEffect } from 'react';
+import { FC, SyntheticEvent, useEffect } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@hooks/useAuth';
+import { useForm } from '@hooks/useForm'; // путь укажите ваш
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, handleChange } = useForm({
+    email: '',
+    password: ''
+  });
+
   const { isAuthenticated, login, error } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,16 +24,15 @@ export const Login: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    login({ email, password });
+    login({ email: values.email, password: values.password });
   };
 
   return (
     <LoginUI
       errorText={error || ''}
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
+      email={values.email}
+      password={values.password}
+      handleInputChange={handleChange}
       handleSubmit={handleSubmit}
     />
   );

@@ -6,7 +6,8 @@ import {
   selectCurrentOrder,
   selectOrdersLoading,
   selectOrdersError,
-  selectOrderById
+  selectOrderById,
+  selectOrderByNumber
 } from '@selectors';
 
 export const useOrders = () => {
@@ -30,8 +31,29 @@ export const useOrders = () => {
     return useSelector(select);
   };
 
+  const getOrderByNumber = (orderId: number) => {
+    const select = selectOrderByNumber(orderId);
+    return useSelector(select);
+  };
+
   return useMemo(
-    () => ({ orders, currentOrder, loading, error, fetchOrders, getOrderById }),
-    [orders, currentOrder, loading, error, fetchOrders, getOrderById]
+    () => ({
+      orders,
+      currentOrder,
+      loading,
+      error,
+      fetchOrders,
+      getOrderById,
+      getOrderByNumber
+    }),
+    [
+      orders,
+      currentOrder,
+      loading,
+      error,
+      fetchOrders,
+      getOrderById,
+      getOrderByNumber
+    ]
   );
 };

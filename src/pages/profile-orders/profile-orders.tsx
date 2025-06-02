@@ -1,14 +1,9 @@
 import { useOrders } from '@hooks/useOrders';
-import { useDispatch } from '@store';
 import { ProfileOrdersUI } from '@ui-pages';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 export const ProfileOrders: FC = () => {
-  const { orders, fetchOrders } = useOrders();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    fetchOrders();
-  }, [dispatch]);
+  const { orders } = useOrders();
 
   return <ProfileOrdersUI orders={orders} />;
 };

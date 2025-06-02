@@ -7,64 +7,10 @@ import constructorReducer, {
   closeOrderModal,
   sendOrder
 } from './constructorSlice';
-import * as api from '@api';
-
-import { TConstructorIngredient } from '@utils-types';
+import { initialState } from './constructorSlice';
+import { bun, ingredient1, ingredient2 } from './testConstants';
 
 describe('Constructor Slice Test', () => {
-  const ingredient1: TConstructorIngredient = {
-    id: '1',
-    _id: '1',
-    name: 'Соус Spicy-X',
-    type: 'sauce',
-    proteins: 30,
-    fat: 20,
-    carbohydrates: 40,
-    calories: 30,
-    price: 90,
-    image: 'https://code.s3.yandex.net/react/code/sauce-02.png',
-    image_mobile: 'https://code.s3.yandex.net/react/code/sauce-02-mobile.png',
-    image_large: 'https://code.s3.yandex.net/react/code/sauce-02-large.png'
-  };
-
-  const ingredient2: TConstructorIngredient = {
-    id: '2',
-    _id: '2',
-    name: 'Биокотлета из марсианской Магнолии',
-    type: 'main',
-    proteins: 420,
-    fat: 142,
-    carbohydrates: 242,
-    calories: 4242,
-    price: 424,
-    image: 'https://code.s3.yandex.net/react/code/meat-01.png',
-    image_mobile: 'https://code.s3.yandex.net/react/code/meat-01-mobile.png',
-    image_large: 'https://code.s3.yandex.net/react/code/meat-01-large.png'
-  };
-
-  const bun: TConstructorIngredient = {
-    id: '3',
-    _id: '3',
-    name: 'Краторная булка N-200i',
-    type: 'bun',
-    proteins: 80,
-    fat: 24,
-    carbohydrates: 53,
-    calories: 420,
-    price: 1255,
-    image: 'https://code.s3.yandex.net/react/code/bun-02.png',
-    image_mobile: 'https://code.s3.yandex.net/react/code/bun-02-mobile.png',
-    image_large: 'https://code.s3.yandex.net/react/code/bun-02-large.png'
-  };
-
-  const initialState = {
-    bun: null,
-    ingredients: [],
-    orderRequest: false,
-    orderModalData: null,
-    orderError: null
-  };
-
   it('addBun should add bun into constructor', () => {
     const state = constructorReducer(initialState, addBun(bun));
     expect(state.bun).toEqual(bun);
@@ -144,12 +90,11 @@ describe('Constructor Slice Test', () => {
   });
 
   it('should handle sendOrder.fulfilled', () => {
-    const mockOrder = { number: 12345 /* другие поля, если нужны */ };
+    const mockOrder = { number: 12345 };
     const action = {
       type: sendOrder.fulfilled.type,
       payload: { order: mockOrder }
     };
-    // Предположим, что в состоянии есть булка и ингредиенты
     const stateBefore = {
       ...initialState,
       bun: { id: '1' } as any,

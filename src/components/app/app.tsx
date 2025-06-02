@@ -15,17 +15,37 @@ import {
   ResetPassword
 } from '@pages';
 
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  useLocation
+} from 'react-router-dom';
 import { useEffect } from 'react';
-import { fetchUser } from '@slices';
-import { useDispatch } from '@store';
+import { useIngredients } from '@hooks/useIngredients';
+import { useOrders } from '@hooks/useOrders';
+import { useFeed } from '@hooks/useFeed';
+import { useAuth } from '@hooks/useAuth';
 
 const RootLayout = () => {
-  const dispatch = useDispatch();
+  const { fetchIngredients } = useIngredients();
+  const { isAuthenticated, getUser } = useAuth();
+  const { fetchOrders } = useOrders();
+  const { getFeeds } = useFeed();
 
   useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
+    fetchIngredients();
+    getUser();
+    getFeeds();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchOrders();
+    }
+  }, [isAuthenticated]);
+
   return (
     <>
       <AppHeader />
@@ -34,70 +54,92 @@ const RootLayout = () => {
   );
 };
 
-const router = createBrowserRouter([
-  {
-    element: <RootLayout />,
-    children: [
-      { path: '/', element: <ConstructorPage /> },
+const GuestRoutes = () => <ProtectedRoute type='guest' />;
 
-      {
-        element: <ProtectedRoute type='guest' />,
-        children: [
-          { path: '/login', element: <Login /> },
-          { path: '/register', element: <Register /> },
-          { path: '/forgot-password', element: <ForgotPassword /> },
-          { path: '/reset-password', element: <ResetPassword /> }
-        ]
-      },
+const AuthRoutes = () => <ProtectedRoute type='auth' />;
 
-      {
-        element: <ProtectedRoute type='auth' />,
-        children: [
-          { path: '/profile', element: <Profile /> },
-          { path: '/profile/orders', element: <ProfileOrders /> },
-          {
-            path: '/profile/orders/:number',
-            element: (
+const DefautRoutes = () => <ProtectedRoute type='all' />;
+
+const AppRoutes = () => {
+  const location = useLocation();
+
+  const background = location.state && location.state.background;
+
+  return (
+    <>
+      <Routes location={background || location}>
+        <Route path='/' element={<RootLayout />}>
+          <Route element={<GuestRoutes />}>
+            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+            <Route path='forgot-password' element={<ForgotPassword />} />
+            <Route path='reset-password' element={<ResetPassword />} />
+          </Route>
+
+          <Route element={<AuthRoutes />}>
+            <Route path='profile' element={<Profile />} />
+            <Route path='profile/orders' element={<ProfileOrders />} />
+            <Route path='profile/orders/:number' element={<OrderInfo />} />
+          </Route>
+
+          <Route element={<DefautRoutes />}>
+            <Route index element={<ConstructorPage />} />
+
+            <Route path='feed' element={<Feed />} />
+            <Route path='feed/:number' element={<OrderInfo />} />
+            <Route path='ingredients/:id' element={<IngredientDetails />} />
+
+            <Route path='*' element={<NotFound404 />} />
+          </Route>
+        </Route>
+      </Routes>
+
+      {background && (
+        <Routes>
+          <Route
+            path='profile/orders/:number'
+            element={
               <ModalWrapper
                 navigationOnClose='/profile/orders'
                 title='Информация о заказе'
               >
                 <OrderInfo />
               </ModalWrapper>
-            )
-          }
-        ]
-      },
-
-      { path: '/feed', element: <Feed /> },
-      {
-        path: '/feed/:number',
-        element: (
-          <ModalWrapper navigationOnClose='/feed' title='Информация о заказе'>
-            <OrderInfo />
-          </ModalWrapper>
-        )
-      },
-      {
-        path: '/ingredients/:id',
-        element: (
-          <ModalWrapper
-            navigationOnClose={'/'}
-            title='Информация об ингредиенте'
-          >
-            <IngredientDetails />
-          </ModalWrapper>
-        )
-      },
-
-      { path: '*', element: <NotFound404 /> }
-    ]
-  }
-]);
+            }
+          />
+          <Route
+            path='feed/:number'
+            element={
+              <ModalWrapper
+                navigationOnClose='/feed'
+                title='Информация о заказе'
+              >
+                <OrderInfo />
+              </ModalWrapper>
+            }
+          />
+          <Route
+            path='ingredients/:id'
+            element={
+              <ModalWrapper
+                navigationOnClose='/'
+                title='Информация об ингредиенте'
+              >
+                <IngredientDetails />
+              </ModalWrapper>
+            }
+          />
+        </Routes>
+      )}
+    </>
+  );
+};
 
 const App = () => (
   <div className={styles.app}>
-    <RouterProvider router={router} />
+    <Router>
+      <AppRoutes />
+    </Router>
   </div>
 );
 

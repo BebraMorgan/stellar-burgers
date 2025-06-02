@@ -1,36 +1,8 @@
-import feedsReducer, { fetchFeeds } from './feedsSlice';
-import { TOrdersData, TOrder } from '@utils-types';
+import feedsReducer, { fetchFeeds, initialState } from './feedsSlice';
+import { TOrdersData } from '@utils-types';
+import { mockOrders } from './testConstants';
 
 describe('feedsSlice reducer and async actions', () => {
-  const initialState = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    loading: false,
-    error: null
-  };
-
-  const mockOrders: TOrder[] = [
-    {
-      _id: '1',
-      ingredients: ['1', '2'],
-      status: 'done',
-      name: 'Order 1',
-      createdAt: '2025-06-01T10:00:00.000Z',
-      updatedAt: '2025-06-01T10:05:00.000Z',
-      number: 1001
-    },
-    {
-      _id: '2',
-      ingredients: ['3', '4'],
-      status: 'pending',
-      name: 'Order 2',
-      createdAt: '2025-06-01T11:00:00.000Z',
-      updatedAt: '2025-06-01T11:05:00.000Z',
-      number: 1002
-    }
-  ];
-
   it('should handle initial state', () => {
     expect(feedsReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });

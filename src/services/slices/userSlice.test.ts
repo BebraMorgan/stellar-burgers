@@ -1,27 +1,15 @@
+import { mockUser } from './testConstants';
 import userReducer, {
   fetchUser,
   updateUser,
   loginUser,
   registerUser,
   logoutUser,
-  clearUserError
+  clearUserError,
+  initialState
 } from './userSlice';
 
-import { TUser } from '@utils-types';
-
 describe('userSlice reducer and async actions', () => {
-  const initialState = {
-    user: null,
-    loading: false,
-    error: null,
-    isAuthenticated: false
-  };
-
-  const mockUser: TUser = {
-    email: 'test@example.com',
-    name: 'Test User'
-  };
-
   it('should handle initial state', () => {
     expect(userReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });

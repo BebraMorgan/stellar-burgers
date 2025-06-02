@@ -11,3 +11,8 @@ export const selectOrderById = (orderId: string) =>
   createSelector(selectOrders, (orders) =>
     orders.find((order) => order._id === orderId)
   );
+
+export const selectOrderByNumber = (number: number) =>
+  createSelector(selectOrders, (orders) =>
+    orders.find((order) => order.number == number)
+  );

@@ -1,42 +1,10 @@
-import ingredientsReducer, { fetchIngredients } from './ingredientsSlice';
-import { TIngredient } from '@utils-types';
+import ingredientsReducer, {
+  fetchIngredients,
+  initialState
+} from './ingredientsSlice';
+import { mockIngredients } from './testConstants';
 
 describe('ingredientsSlice reducer and async actions', () => {
-  const initialState = {
-    items: [],
-    loading: false,
-    error: null
-  };
-
-  const mockIngredients: TIngredient[] = [
-    {
-      _id: '1',
-      name: 'Булка N-200i',
-      type: 'bun',
-      proteins: 80,
-      fat: 24,
-      carbohydrates: 53,
-      calories: 420,
-      price: 1255,
-      image: 'https://code.s3.yandex.net/react/code/bun-02.png',
-      image_mobile: 'https://code.s3.yandex.net/react/code/bun-02-mobile.png',
-      image_large: 'https://code.s3.yandex.net/react/code/bun-02-large.png'
-    },
-    {
-      _id: '2',
-      name: 'Соус Spicy-X',
-      type: 'sauce',
-      proteins: 30,
-      fat: 20,
-      carbohydrates: 40,
-      calories: 30,
-      price: 90,
-      image: 'https://code.s3.yandex.net/react/code/sauce-02.png',
-      image_mobile: 'https://code.s3.yandex.net/react/code/sauce-02-mobile.png',
-      image_large: 'https://code.s3.yandex.net/react/code/sauce-02-large.png'
-    }
-  ];
-
   it('should handle initial state', () => {
     expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual(
       initialState

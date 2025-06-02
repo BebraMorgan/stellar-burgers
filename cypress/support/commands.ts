@@ -35,3 +35,22 @@
 //     }
 //   }
 // }
+//
+/// <reference types="cypress" />
+import { selectors, SelectorKey } from './selectors';
+
+Cypress.Commands.add('addIngredient', (type: 'bun' | 'main' | 'sauce') => {
+  const selectorKey =
+    `ingredients${type.charAt(0).toUpperCase()}${type.slice(1)}` as SelectorKey;
+
+  cy.get(selectors[selectorKey]).contains('Добавить').click();
+});
+
+Cypress.Commands.add('placeOrder', () => {
+  cy.get(selectors.orderBurgerButton).contains('Оформить заказ').click();
+});
+
+Cypress.Commands.add('closeModal', () => {
+  cy.get(selectors.closeIcon).should('exist').click();
+  cy.get(selectors.modal).should('not.exist');
+});

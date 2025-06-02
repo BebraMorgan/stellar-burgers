@@ -3,23 +3,11 @@ import styles from './constructor-page.module.css';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useIngredients } from '@hooks/useIngredients';
-import { useDispatch } from '@store';
 
 export const ConstructorPage: FC = () => {
-  const {
-    loading: isIngredientsLoading,
-    items,
-    fetchIngredients
-  } = useIngredients();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (items.length === 0 && !isIngredientsLoading) {
-      fetchIngredients();
-    }
-  }, [dispatch, items.length, isIngredientsLoading]);
+  const { loading: isIngredientsLoading } = useIngredients();
 
   return (
     <>

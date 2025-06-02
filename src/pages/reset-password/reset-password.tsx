@@ -3,23 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { resetPasswordApi } from '@api';
 import { ResetPasswordUI } from '@ui-pages';
+import { useForm } from '@hooks/useForm';
 
 export const ResetPassword: FC = () => {
+  const { values, handleChange } = useForm({ password: '', token: '' });
   const navigate = useNavigate();
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
   const [error, setError] = useState<Error | null>(null);
-
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    setError(null);
-    resetPasswordApi({ password, token })
-      .then(() => {
-        localStorage.removeItem('resetPassword');
-        navigate('/login');
-      })
-      .catch((err) => setError(err));
-  };
 
   useEffect(() => {
     if (!localStorage.getItem('resetPassword')) {
@@ -27,13 +16,23 @@ export const ResetPassword: FC = () => {
     }
   }, [navigate]);
 
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    setError(null);
+    resetPasswordApi({ password: values.password, token: values.token })
+      .then(() => {
+        localStorage.removeItem('resetPassword');
+        navigate('/login');
+      })
+      .catch((err) => setError(err));
+  };
+
   return (
     <ResetPasswordUI
       errorText={error?.message}
-      password={password}
-      token={token}
-      setPassword={setPassword}
-      setToken={setToken}
+      password={values.password}
+      token={values.token}
+      handleInputChange={handleChange}
       handleSubmit={handleSubmit}
     />
   );

@@ -1,6 +1,6 @@
 import { Modal } from '@components';
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ModalWrapperProps } from './type';
 
 export const ModalWrapper: FC<ModalWrapperProps> = ({
@@ -9,8 +9,8 @@ export const ModalWrapper: FC<ModalWrapperProps> = ({
   navigationOnClose
 }) => {
   const navigate = useNavigate();
+  const { state } = useLocation();
 
-  // Функция закрытия модалки — возвращаемся на предыдущий маршрут
   const onClose = () => {
     navigate(navigationOnClose);
   };

@@ -1,14 +1,19 @@
 import { FC } from 'react';
-
 import { Input, Button } from '@zlden/react-developer-burger-ui-components';
 import styles from '../common.module.css';
 import { Link } from 'react-router-dom';
-import { PageUIProps } from '../common-type';
 
-export const ForgotPasswordUI: FC<PageUIProps> = ({
-  errorText,
+interface ForgotPasswordUIProps {
+  email: string;
+  errorText?: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: React.SyntheticEvent) => void;
+}
+
+export const ForgotPasswordUI: FC<ForgotPasswordUIProps> = ({
   email,
-  setEmail,
+  errorText,
+  handleInputChange,
   handleSubmit
 }) => (
   <main className={styles.container}>
@@ -16,18 +21,18 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
       <h3 className='pb-6 text text_type_main-medium'>Восстановление пароля</h3>
       <form
         className={`pb-15 ${styles.form}`}
-        name='login'
+        name='forgot-password'
         onSubmit={handleSubmit}
       >
         <div className='pb-6'>
           <Input
             type='email'
             placeholder='Укажите e-mail'
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleInputChange}
             value={email}
             name='email'
             error={false}
-            errorText=''
+            errorText={errorText || ''}
             size='default'
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}

@@ -6,27 +6,33 @@ import {
 } from '@zlden/react-developer-burger-ui-components';
 import styles from '../common.module.css';
 import { Link } from 'react-router-dom';
-import { ResetPasswordUIProps } from './type';
+
+interface ResetPasswordUIProps {
+  password: string;
+  token: string;
+  errorText?: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: React.SyntheticEvent) => void;
+}
 
 export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
   errorText,
   password,
-  setPassword,
-  handleSubmit,
   token,
-  setToken
+  handleInputChange,
+  handleSubmit
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
       <h3 className='pb-6 text text_type_main-medium'>Восстановление пароля</h3>
       <form
         className={`pb-15 ${styles.form}`}
-        name='login'
+        name='reset-password'
         onSubmit={handleSubmit}
       >
         <div className='pb-6'>
           <PasswordInput
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleInputChange}
             value={password}
             name='password'
           />
@@ -35,7 +41,7 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
           <Input
             type='text'
             placeholder='Введите код из письма'
-            onChange={(e) => setToken(e.target.value)}
+            onChange={handleInputChange}
             value={token}
             name='token'
             error={false}

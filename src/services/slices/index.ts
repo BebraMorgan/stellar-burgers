@@ -11,8 +11,25 @@ export { fetchOrders } from './ordersSlice';
 export * from './userSlice';
 
 export { fetchFeeds } from './feedsSlice';
+export {
+  fetchUser,
+  updateUser,
+  loginUser,
+  registerUser,
+  logoutUser,
+  clearUserError
+} from './userSlice';
 
-export * from './constructorSlice';
+// Экспортируем из constructorSlice всё, кроме initialState
+export {
+  addBun,
+  addIngredient,
+  removeIngredient,
+  moveIngredient,
+  clearConstructor,
+  closeOrderModal,
+  sendOrder
+} from './constructorSlice';
 
 const rootReducer = combineReducers({
   ingredients,
