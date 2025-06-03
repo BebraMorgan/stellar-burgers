@@ -1,11 +1,14 @@
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ProfileMenuUI } from '@ui';
+import { useAuth } from '@hooks/useAuth';
 
 export const ProfileMenu: FC = () => {
   const { pathname } = useLocation();
-
-  const handleLogout = () => {};
+  const { logout } = useAuth();
+  const handleLogout = () => {
+    logout();
+  };
 
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;
 };

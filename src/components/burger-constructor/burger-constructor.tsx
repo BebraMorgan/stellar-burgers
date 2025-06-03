@@ -1,36 +1,29 @@
-import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
+import { FC } from 'react';
 import { BurgerConstructorUI } from '@ui';
+import { useBurgerConstructor } from '@hooks/useBurgerConstructor';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@hooks/useAuth';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const {
+    price,
+    orderRequest,
+    orderModalData,
+    constructorItems,
+    onOrderClick,
+    onCloseOrderModal
+  } = useBurgerConstructor();
+
+  const handleOrderClick = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    onOrderClick();
   };
-
-  const orderRequest = false;
-
-  const orderModalData = null;
-
-  const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
-  };
-  const closeOrderModal = () => {};
-
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
-  );
-
-  return null;
 
   return (
     <BurgerConstructorUI
@@ -38,8 +31,8 @@ export const BurgerConstructor: FC = () => {
       orderRequest={orderRequest}
       constructorItems={constructorItems}
       orderModalData={orderModalData}
-      onOrderClick={onOrderClick}
-      closeOrderModal={closeOrderModal}
+      onOrderClick={handleOrderClick}
+      closeOrderModal={onCloseOrderModal}
     />
   );
 };

@@ -2,8 +2,12 @@ import { Dispatch, SetStateAction } from 'react';
 import { PageUIProps } from '../common-type';
 
 export type RegisterUIProps = PageUIProps & {
-  password: string;
+  email: string;
   userName: string;
-  setPassword: Dispatch<SetStateAction<string>>;
+  password: string;
+  setEmail: Dispatch<SetStateAction<string>>;
   setUserName: Dispatch<SetStateAction<string>>;
+  setPassword: Dispatch<SetStateAction<string>>;
+  errorText?: string;
+  handleSubmit: (e: React.SyntheticEvent) => void;
 };
